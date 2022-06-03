@@ -1,0 +1,208 @@
+pdm:
+  tables:
+    - columns:
+        - dataType: NUMERIC
+          isPrimaryKey: false
+          name: budget
+        - dataType: STRING
+          isPrimaryKey: true
+          name: campaign_channel_id
+        - dataType: INT
+          isPrimaryKey: false
+          name: campaign_id
+          referencedTableColumn: campaign_id
+          referencedTableId: campaigns
+        - dataType: STRING
+          isPrimaryKey: false
+          name: category
+        - dataType: NUMERIC
+          isPrimaryKey: false
+          name: spend
+        - dataType: STRING
+          isPrimaryKey: false
+          name: type
+      id: campaign_channels
+      path:
+        - schema_demo
+        - campaign_channels
+      type: TABLE
+    - columns:
+        - dataType: INT
+          isPrimaryKey: true
+          name: campaign_id
+        - dataType: STRING
+          isPrimaryKey: false
+          name: campaign_name
+      id: campaigns
+      path:
+        - schema_demo
+        - campaigns
+      type: TABLE
+    - columns:
+        - dataType: NUMERIC
+          isPrimaryKey: false
+          name: agriculture
+        - dataType: NUMERIC
+          isPrimaryKey: false
+          name: arable
+        - dataType: INT
+          isPrimaryKey: false
+          name: area
+        - dataType: NUMERIC
+          isPrimaryKey: false
+          name: birth_rate
+        - dataType: NUMERIC
+          isPrimaryKey: false
+          name: climate
+        - dataType: NUMERIC
+          isPrimaryKey: false
+          name: coast_line
+        - dataType: STRING
+          isPrimaryKey: false
+          name: country
+        - dataType: NUMERIC
+          isPrimaryKey: false
+          name: crops
+        - dataType: NUMERIC
+          isPrimaryKey: false
+          name: death_rate
+        - dataType: INT
+          isPrimaryKey: false
+          name: gdp
+        - dataType: NUMERIC
+          isPrimaryKey: false
+          name: industry
+        - dataType: NUMERIC
+          isPrimaryKey: false
+          name: infant_mortality
+        - dataType: NUMERIC
+          isPrimaryKey: false
+          name: literacy
+        - dataType: NUMERIC
+          isPrimaryKey: false
+          name: net_migration
+        - dataType: NUMERIC
+          isPrimaryKey: false
+          name: other
+        - dataType: NUMERIC
+          isPrimaryKey: false
+          name: phones_per_1k
+        - dataType: NUMERIC
+          isPrimaryKey: false
+          name: pop_density
+        - dataType: INT
+          isPrimaryKey: false
+          name: population
+        - dataType: STRING
+          isPrimaryKey: false
+          name: region
+        - dataType: NUMERIC
+          isPrimaryKey: false
+          name: service
+      id: countries
+      path:
+        - schema_demo
+        - countries
+      type: TABLE
+    - columns:
+        - dataType: STRING
+          isPrimaryKey: false
+          name: code
+        - dataType: NUMERIC
+          isPrimaryKey: false
+          name: latitude
+        - dataType: NUMERIC
+          isPrimaryKey: false
+          name: longitude
+        - dataType: STRING
+          isPrimaryKey: false
+          name: name
+        - dataType: STRING
+          isPrimaryKey: false
+          name: usa_state
+        - dataType: STRING
+          isPrimaryKey: false
+          name: usa_state_code
+        - dataType: NUMERIC
+          isPrimaryKey: false
+          name: usa_state_latitude
+        - dataType: NUMERIC
+          isPrimaryKey: false
+          name: usa_state_longitude
+      id: countries_geo_coordinates
+      path:
+        - schema_demo
+        - countries_geo_coordinates
+      type: TABLE
+    - columns:
+        - dataType: INT
+          isPrimaryKey: true
+          name: customer_id
+        - dataType: STRING
+          isPrimaryKey: false
+          name: customer_name
+        - dataType: STRING
+          isPrimaryKey: false
+          name: region
+        - dataType: STRING
+          isPrimaryKey: false
+          name: state
+      id: customers
+      path:
+        - schema_demo
+        - customers
+      type: TABLE
+    - columns:
+        - dataType: INT
+          isPrimaryKey: false
+          name: campaign_id
+          referencedTableColumn: campaign_id
+          referencedTableId: campaigns
+        - dataType: INT
+          isPrimaryKey: false
+          name: customer_id
+          referencedTableColumn: customer_id
+          referencedTableId: customers
+        - dataType: DATE
+          isPrimaryKey: false
+          name: date
+        - dataType: STRING
+          isPrimaryKey: false
+          name: order_id
+        - dataType: STRING
+          isPrimaryKey: true
+          name: order_line_id
+        - dataType: STRING
+          isPrimaryKey: false
+          name: order_status
+        - dataType: NUMERIC
+          isPrimaryKey: false
+          name: price
+        - dataType: INT
+          isPrimaryKey: false
+          name: product_id
+          referencedTableColumn: product_id
+          referencedTableId: products
+        - dataType: NUMERIC
+          isPrimaryKey: false
+          name: quantity
+      id: order_lines
+      path:
+        - schema_demo
+        - order_lines
+      type: TABLE
+    - columns:
+        - dataType: STRING
+          isPrimaryKey: false
+          name: category
+        - dataType: INT
+          isPrimaryKey: true
+          name: product_id
+        - dataType: STRING
+          isPrimaryKey: false
+          name: product_name
+      id: products
+      path:
+        - schema_demo
+        - products
+      type: TABLE
