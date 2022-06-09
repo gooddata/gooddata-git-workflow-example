@@ -1,6 +1,13 @@
 {
-  "name": "declarative-definitions",
+  "name": "gooddata-git-workflow-example",
   "version": "1.0.0",
+  "author": "GoodData",
+  "description": "An example of CI/CD setup for GoodData.CN server and GoodData Cloud",
+  "license": "SEE LICENSE IN LICENSE",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gooddata/gooddata-git-workflow-example"
+  },
   "scripts": {
     "import-dev": "httpyac --all --bail --json --env=development ./scripts/import.http > ./temp && node ./scripts/toYaml.js < ./temp && rm temp",
     "create-dev": "node ./scripts/toJson.js && httpyac --all --bail --env=development ./scripts/create.http && rm -rf ./json",
@@ -9,7 +16,6 @@
     "create-prod": "node ./scripts/toJson.js --production && httpyac --all --bail --env=production ./scripts/create.http && rm -rf ./json",
     "update-prod": "node ./scripts/toJson.js --production && httpyac --all --bail --env=production ./scripts/update.http && rm -rf ./json"
   },
-  "private": true,
   "dependencies": {
     "glob": "^7.2.3",
     "httpyac": "^5.4.1",
