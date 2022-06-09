@@ -1,0 +1,257 @@
+ldm:
+  datasets:
+    - attributes:
+        - description: Campaign channel id
+          id: campaign_channel_id
+          labels: []
+          sourceColumn: campaign_channel_id
+          tags:
+            - Campaign channels
+          title: Campaign channel id
+        - description: Category
+          id: campaign_channels.category
+          labels: []
+          sourceColumn: category
+          tags:
+            - Campaign channels
+          title: Category
+        - description: Type
+          id: type
+          labels: []
+          sourceColumn: type
+          tags:
+            - Campaign channels
+          title: Type
+      dataSourceTableId:
+        dataSourceId: demo_ds
+        id: campaign_channels
+        type: dataSource
+      description: Campaign channels
+      facts:
+        - description: Budget
+          id: budget
+          sourceColumn: budget
+          tags:
+            - Campaign channels
+          title: Budget
+        - description: Spend
+          id: spend
+          sourceColumn: spend
+          tags:
+            - Campaign channels
+          title: Spend
+      grain:
+        - id: campaign_channel_id
+          type: attribute
+      id: campaign_channels
+      references:
+        - identifier:
+            id: campaigns
+            type: dataset
+          multivalue: false
+          sourceColumns:
+            - campaign_id
+      tags:
+        - Campaign channels
+      title: Campaign channels
+    - attributes:
+        - description: Campaign id
+          id: campaign_id
+          labels: []
+          sourceColumn: campaign_id
+          tags:
+            - Campaigns
+          title: Campaign id
+        - description: Campaign name
+          id: campaign_name
+          labels: []
+          sourceColumn: campaign_name
+          tags:
+            - Campaigns
+          title: Campaign name
+      dataSourceTableId:
+        dataSourceId: demo_ds
+        id: campaigns
+        type: dataSource
+      description: Campaigns
+      facts: []
+      grain:
+        - id: campaign_id
+          type: attribute
+      id: campaigns
+      references: []
+      tags:
+        - Campaigns
+      title: Campaigns
+    - attributes:
+        - description: Customer id
+          id: customer_id
+          labels: []
+          sourceColumn: customer_id
+          tags:
+            - Customers
+          title: Customer id
+        - description: Customer name
+          id: customer_name
+          labels: []
+          sourceColumn: customer_name
+          tags:
+            - Customers
+          title: Customer name
+        - description: Region
+          id: region
+          labels: []
+          sourceColumn: region
+          tags:
+            - Customers
+          title: Region
+        - description: State
+          id: state
+          labels:
+            - description: Location
+              id: geo__state__location
+              sourceColumn: geo__state__location
+              tags:
+                - Customers
+              title: Location
+          sourceColumn: state
+          tags:
+            - Customers
+          title: State
+      dataSourceTableId:
+        dataSourceId: demo_ds
+        id: customers
+        type: dataSource
+      description: Customers
+      facts: []
+      grain:
+        - id: customer_id
+          type: attribute
+      id: customers
+      references: []
+      tags:
+        - Customers
+      title: Customers
+    - attributes:
+        - description: Order id
+          id: order_id
+          labels: []
+          sourceColumn: order_id
+          tags:
+            - Order lines
+          title: Order id
+        - description: Order line id
+          id: order_line_id
+          labels: []
+          sourceColumn: order_line_id
+          tags:
+            - Order lines
+          title: Order line id
+        - description: Order status
+          id: order_status
+          labels: []
+          sourceColumn: order_status
+          tags:
+            - Order lines
+          title: Order status
+      dataSourceTableId:
+        dataSourceId: demo_ds
+        id: order_lines
+        type: dataSource
+      description: Order lines
+      facts:
+        - description: Price
+          id: price
+          sourceColumn: price
+          tags:
+            - Order lines
+          title: Price
+        - description: Quantity
+          id: quantity
+          sourceColumn: quantity
+          tags:
+            - Order lines
+          title: Quantity
+      grain:
+        - id: order_line_id
+          type: attribute
+      id: order_lines
+      references:
+        - identifier:
+            id: campaigns
+            type: dataset
+          multivalue: false
+          sourceColumns:
+            - campaign_id
+        - identifier:
+            id: customers
+            type: dataset
+          multivalue: false
+          sourceColumns:
+            - customer_id
+        - identifier:
+            id: date
+            type: dataset
+          multivalue: false
+          sourceColumns:
+            - date
+        - identifier:
+            id: products
+            type: dataset
+          multivalue: false
+          sourceColumns:
+            - product_id
+      tags:
+        - Order lines
+      title: Order lines
+    - attributes:
+        - description: Product id
+          id: product_id
+          labels: []
+          sourceColumn: product_id
+          tags:
+            - Products
+          title: Product id
+        - description: Product name
+          id: product_name
+          labels: []
+          sourceColumn: product_name
+          tags:
+            - Products
+          title: Product name
+        - description: Category
+          id: products.category
+          labels: []
+          sourceColumn: category
+          tags:
+            - Products
+          title: Category
+      dataSourceTableId:
+        dataSourceId: demo_ds
+        id: products
+        type: dataSource
+      description: Products
+      facts: []
+      grain:
+        - id: product_id
+          type: attribute
+      id: products
+      references: []
+      tags:
+        - Products
+      title: Products
+  dateInstances:
+    - description: ""
+      granularities:
+        - DAY
+        - WEEK
+        - MONTH
+        - QUARTER
+        - YEAR
+      granularitiesFormatting:
+        titleBase: ""
+        titlePattern: "%titleBase - %granularityTitle"
+      id: date
+      tags:
+        - Date
+      title: Date

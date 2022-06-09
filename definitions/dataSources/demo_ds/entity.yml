@@ -1,0 +1,10 @@
+attributes:
+  type: SNOWFLAKE
+  name: GDC Good Demo Data source
+  enableCaching: false
+  username: "{{demo_ds_user}}"
+  password: "{{demo_ds_password}}"
+  url: "{{demo_ds_url}}"
+  schema: "{{demo_ds_schema}}"
+id: demo_ds
+type: dataSource

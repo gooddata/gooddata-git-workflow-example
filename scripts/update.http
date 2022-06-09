@@ -1,0 +1,101 @@
+# (C) 2022 GoodData Corporation
+# Update delcarative definitions on the server
+# This file contains a set of HTTP requests that you can adopt to your workspace and use for VCS integration
+
+### Update data source
+# @name dataSource
+PUT {{base_url}}/api/entities/dataSources/demo_ds
+Authorization: Bearer {{token}}
+Content-Type: application/vnd.gooddata.api+json
+
+< ../json/dataSources/demo_ds/entity.json
+
+> {%
+client.test('Update data source', () => {
+  client.assert(response.status >= 200 && response.status < 300, `Request failed with status code ${response.status}`);
+});
+%}
+
+### Publish data source physical data model
+# @name dataSourcePhysicalModel
+PUT {{base_url}}/api/layout/dataSources/demo_ds/physicalModel
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+< ../json/dataSources/demo_ds/physicalModel.json
+
+> {%
+client.test('Publish data source PDM', () => {
+  client.assert(response.status >= 200 && response.status < 300, `Request failed with status code ${response.status}`);
+});
+%}
+
+### Publish user groups
+# @name userGroups
+PUT {{base_url}}/api/layout/userGroups
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+< ../json/userGroups.json
+
+> {%
+client.test('Publish user groups', () => {
+  client.assert(response.status >= 200 && response.status < 300, `Request failed with status code ${response.status}`);
+});
+%}
+
+### Update the workspace
+# @name workspace
+PUT {{base_url}}/api/entities/workspaces/demo_ws
+Authorization: Bearer {{token}}
+Content-Type: application/vnd.gooddata.api+json
+
+< ../json/workspaces/demo_ws/entity.json
+
+> {%
+client.test('Update the workspace', () => {
+  client.assert(response.status >= 200 && response.status < 300, `Request failed with status code ${response.status}`);
+});
+%}
+
+### Publish the workspace permissions
+# @name workspacePermissions
+PUT {{base_url}}/api/layout/workspaces/demo_ws/permissions
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+< ../json/workspaces/demo_ws/permissions.json
+
+> {%
+client.test('Publish workspace permissions', () => {
+  client.assert(response.status >= 200 && response.status < 300, `Request failed with status code ${response.status}`);
+});
+%}
+
+### Publish the workspace logical data model
+# @name workspaceLDM
+PUT {{base_url}}/api/layout/workspaces/demo_ws/logicalModel
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+< ../json/workspaces/demo_ws/logicalModel.json
+
+> {%
+client.test('Publish workspace LDM', () => {
+  client.assert(response.status >= 200 && response.status < 300, `Request failed with status code ${response.status}`);
+});
+%}
+
+### Publish the workspace analytics model
+# @name workspaceAnalytics
+PUT {{base_url}}/api/layout/workspaces/demo_ws/analyticsModel
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+< ../json/workspaces/demo_ws/analyticsModel.json
+
+> {%
+client.test('Publish workspace analytical model', () => {
+  client.assert(response.status >= 200 && response.status < 300, `Request failed with status code ${response.status}`);
+});
+%}

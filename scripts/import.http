@@ -1,0 +1,80 @@
+# (C) 2022 GoodData Corporation
+# Import delcarative definitions to the local files
+# This file contains a set of HTTP requests that you can adopt to your workspace and use for VCS integration
+
+### Import data source
+# @name dataSource
+GET {{base_url}}/api/entities/dataSources/demo_ds
+Authorization: Bearer {{token}}
+
+> {%
+client.test('Import data source', () => {
+  client.assert(response.status >= 200 && response.status < 300, `Request failed with status code ${response.status}`);
+});
+%}
+
+### Import data source physical data model
+# @name dataSourcePhysicalModel
+GET {{base_url}}/api/layout/dataSources/demo_ds/physicalModel
+Authorization: Bearer {{token}}
+
+> {%
+client.test('Import data source PDM', () => {
+  client.assert(response.status >= 200 && response.status < 300, `Request failed with status code ${response.status}`);
+});
+%}
+
+### Import user groups
+# @name userGroups
+GET {{base_url}}/api/layout/userGroups
+Authorization: Bearer {{token}}
+
+> {%
+client.test('Import user groups', () => {
+  client.assert(response.status >= 200 && response.status < 300, `Request failed with status code ${response.status}`);
+});
+%}
+
+### Import workspace
+# @name workspace
+GET {{base_url}}/api/entities/workspaces/demo_ws
+Authorization: Bearer {{token}}
+
+> {%
+client.test('Import the workspace', () => {
+  client.assert(response.status >= 200 && response.status < 300, `Request failed with status code ${response.status}`);
+});
+%}
+
+### Import workspace permissions
+# @name workspacePermissions
+GET {{base_url}}/api/layout/workspaces/demo_ws/permissions
+Authorization: Bearer {{token}}
+
+> {%
+client.test('Import workspace permissions', () => {
+  client.assert(response.status >= 200 && response.status < 300, `Request failed with status code ${response.status}`);
+});
+%}
+
+### Import workspace logical data model
+# @name workspaceLDM
+GET {{base_url}}/api/layout/workspaces/demo_ws/logicalModel
+Authorization: Bearer {{token}}
+
+> {%
+client.test('Import workspace LDM', () => {
+  client.assert(response.status >= 200 && response.status < 300, `Request failed with status code ${response.status}`);
+});
+%}
+
+### Import workspace analytics model
+# @name workspaceAnalytics
+GET {{base_url}}/api/layout/workspaces/demo_ws/analyticsModel
+Authorization: Bearer {{token}}
+
+> {%
+client.test('Import workspace analytical model', () => {
+  client.assert(response.status >= 200 && response.status < 300, `Request failed with status code ${response.status}`);
+});
+%}
