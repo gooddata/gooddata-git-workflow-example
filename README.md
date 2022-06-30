@@ -165,3 +165,7 @@ big analytical models (i.e. large number of metrics, insights and dashboards). T
 * Use more granular Entities API to load analytical model. See our [REST API reference](https://www.gooddata.com/developers/cloud-native/doc/latest/api/api_reference_all/).
 * Make [`toJson.js`](./scripts/toJson.js) and [`toYaml`](./scripts/toYaml.js) scripts smarter and aware of the type of content they are parsing. E.g. you can define a logic that would split the analytical model and put every dashboard, insight and metric into an individual YAML file.
 * For implementing complex workflows consider using our [Python SDK](https://www.gooddata.com/developers/cloud-native/doc/latest/python-libraries/).
+
+---
+
+*Copyright 2022 GoodData Corporation. For more information, please see [LICENSE](./LICENSE).*
