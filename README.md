@@ -118,6 +118,11 @@ Few steps to keep in mind:
 5. Ensure the `http-client.private.env.json` file is created and populated in the root folder of the project. Make sure to use best practices for storing credentials for your pipeline. For example, in GitHub we are using Secrets to store data source credentials.
 6. Execute `npm run update-prod` to push new changes to the production server.
 
+> NOTE. Current setup will override any changes done on production server through our Web UI. If you want to allow some
+> level of self-service to your users, you would need to define a more complex workflow. With some scripting, it should
+> be relatively easy to verify if there are changes on server since last upload. Then, you can either notify a more
+> technical user about the need to merge changes or even do that automatically to some extent.
+
 ## How do I...
 
 ### ...start using Git workflow for my project
@@ -145,7 +150,7 @@ is not the best idea, as this is the data that changes rather often in most case
 However, if you only manage a handful of predefined users and have the same SSO provider on all your environments,
 you can edit `.http` files to sync users. For examples, in [`import.http`](./scripts/import.http) you can add:
 
-```http request
+```
 ### Import users
 # @name users
 GET {{base_url}}/api/layout/users
@@ -165,3 +170,7 @@ big analytical models (i.e. large number of metrics, insights and dashboards). T
 * Use more granular Entities API to load analytical model. See our [REST API reference](https://www.gooddata.com/developers/cloud-native/doc/latest/api/api_reference_all/).
 * Make [`toJson.js`](./scripts/toJson.js) and [`toYaml`](./scripts/toYaml.js) scripts smarter and aware of the type of content they are parsing. E.g. you can define a logic that would split the analytical model and put every dashboard, insight and metric into an individual YAML file.
 * For implementing complex workflows consider using our [Python SDK](https://www.gooddata.com/developers/cloud-native/doc/latest/python-libraries/).
+
+---
+
+*Copyright 2022 GoodData Corporation. For more information, please see [LICENSE](./LICENSE).*
