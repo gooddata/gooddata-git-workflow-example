@@ -45,8 +45,8 @@ const main = async () => {
 
   await Promise.all(json.requests.map(async item => {
     const url = item.response.request.url;
-    const isEntity = url.includes("/api/entities/");
-    const filePath = path.join(process.cwd(), "definitions", ...url.replace(/.+\/api\/(entities|layout)/i, "").split("/")) + `${isEntity ? path.sep + "entity" : ""}.yml`;
+    const isEntity = url.includes("/entities/");
+    const filePath = path.join(process.cwd(), "definitions", ...url.replace(/.+\/api(\/v[^\/])?\/(entities|layout)/i, "").split("/")) + `${isEntity ? path.sep + "entity" : ""}.yml`;
     const parsedBody = JSON.parse(item.response.body);
     const body = isEntity ? parsedBody.data : parsedBody;
 

@@ -153,7 +153,7 @@ you can edit `.http` files to sync users. For examples, in [`import.http`](./scr
 ```
 ### Import users
 # @name users
-GET {{base_url}}/api/layout/users
+GET {{base_url}}/layout/users
 Authorization: Bearer {{token}}
 
 > {% client.assert(response.status >= 200 && response.status < 300, `Request failed with status code ${response.status}`) %}

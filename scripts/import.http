@@ -4,7 +4,7 @@
 
 ### Import data source
 # @name dataSource
-GET {{base_url}}/api/entities/dataSources/demo_ds
+GET {{base_url}}/entities/dataSources/demo_ds
 Authorization: Bearer {{token}}
 
 > {%
@@ -15,7 +15,7 @@ client.test('Import data source', () => {
 
 ### Import data source physical data model
 # @name dataSourcePhysicalModel
-GET {{base_url}}/api/layout/dataSources/demo_ds/physicalModel
+GET {{base_url}}/layout/dataSources/demo_ds/physicalModel
 Authorization: Bearer {{token}}
 
 > {%
@@ -26,7 +26,7 @@ client.test('Import data source PDM', () => {
 
 ### Import user groups
 # @name userGroups
-GET {{base_url}}/api/layout/userGroups
+GET {{base_url}}/layout/userGroups
 Authorization: Bearer {{token}}
 
 > {%
@@ -37,7 +37,7 @@ client.test('Import user groups', () => {
 
 ### Import workspace
 # @name workspace
-GET {{base_url}}/api/entities/workspaces/demo_ws
+GET {{base_url}}/entities/workspaces/demo_ws
 Authorization: Bearer {{token}}
 
 > {%
@@ -48,7 +48,7 @@ client.test('Import the workspace', () => {
 
 ### Import workspace permissions
 # @name workspacePermissions
-GET {{base_url}}/api/layout/workspaces/demo_ws/permissions
+GET {{base_url}}/layout/workspaces/demo_ws/permissions
 Authorization: Bearer {{token}}
 
 > {%
@@ -59,7 +59,7 @@ client.test('Import workspace permissions', () => {
 
 ### Import workspace logical data model
 # @name workspaceLDM
-GET {{base_url}}/api/layout/workspaces/demo_ws/logicalModel
+GET {{base_url}}/layout/workspaces/demo_ws/logicalModel
 Authorization: Bearer {{token}}
 
 > {%
@@ -70,7 +70,7 @@ client.test('Import workspace LDM', () => {
 
 ### Import workspace analytics model
 # @name workspaceAnalytics
-GET {{base_url}}/api/layout/workspaces/demo_ws/analyticsModel
+GET {{base_url}}/layout/workspaces/demo_ws/analyticsModel
 Authorization: Bearer {{token}}
 
 > {%
