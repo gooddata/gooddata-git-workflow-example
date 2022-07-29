@@ -1,7 +1,7 @@
 # GoodData declarative definitions
 
 This repo contains a set of templates and CLI commands that you can use to manage
-[GoodData.CN](https://www.gooddata.com/developers/cloud-native/) workspaces in a declarative way.
+[GoodData.CN](https://www.gooddata.com/developers/cloud-native/) and GoodData Cloud workspaces in a declarative way.
 Here is when you might want to use it:
 
 * Version Control System (e.g. Git) integration for versioning, collaboration, CI/CD etc.
@@ -50,7 +50,7 @@ compatibility with IntelliJ-specific syntax, so you can have better cooperation 
 have different IDE preferences. We are using `httpYac` CLI tools to run CI/CD scripts as well.
 
 `httpBook` is based on the `httpYac` and adds an option to view `.http` files as Jupyter notebooks. We recommend using
-this extension if you're planning to run HTTP commands mostly manually and would like to add reach description to each
+this extension if you're planning to run HTTP commands mostly manually and would like to add rich description to each
 command.
 
 ### Setting up environment variables
@@ -69,10 +69,10 @@ You can add as many extra environments as you need (e.g. for staging or QA serve
 
 Let's fill in all the needed variables according to your setup:
 
-* In [`http-client.env.json`](./http-client.env.json), fill in base URL for your production server and development server. `http://localhost:3000` for dev server works if you're using local Docker instance for development.
+* In [`http-client.env.json`](./http-client.env.json), fill in base URL for your production server and development server. `http://localhost:3000/api/v1` for dev server works if you're using local Docker instance for development.
 * Copy [`http-client.private.env.json.template`](./http-client.private.env.json.template) to a new `http-client.private.env.json` file.
   * `token` is your API Token for the server.
-  * `demo_ds_*` variables are for database connection. See [`dataSource definition`](./definitions/dataSources/demo_ds/entity.yml) for details. The default example is showcasing Snowflake connection, so you might need to change the definition and variables according to [our docs](https://www.gooddata.com/developers/cloud-native/doc/1.7/administration/add-data-sources/supported/).
+  * `demo_ds_*` variables are for database connection. See [`dataSource definition`](./definitions/dataSources/demo_ds/entity.yml) for details. The default example is showcasing Snowflake connection, so you might need to change the definition and variables according to [our docs](https://www.gooddata.com/developers/cloud-native/doc/hosted/connect-data/supported/).
 
 ### Testing the setup
 
@@ -106,9 +106,9 @@ push the new changes to the production server.
 > NOTE. Whenever you're adding a completely new entity to the organization (like, new a data source or a new workspace),
 > you'll need to create that asset on the production server manually because we are using Entities API instead of Layouts API
 > for that. Entities API does not support upsert, so you'll have to explicitly either create or update the entity. We
-> are working on mitigating this limitation in the future releases of the GoodData.CN.
+> are working on mitigating this limitation in the future releases of the GoodData.CN and GoodData Cloud.
 
-Using our configuration file as an example, you can set up any other pipeline (CirleCI, Bitbucket Pipelines, Jenkins etc.).
+Using our configuration file as an example, you can set up any other pipeline (CircleCI, Bitbucket Pipelines, Jenkins etc.).
 Few steps to keep in mind:
 
 1. Configure your pipeline to be executed on every commit to the main branch.
@@ -139,12 +139,12 @@ The script will create `definitions` folder and populate it with corresponding Y
 The `.http` files are created in a way that you need to explicitly define which workspaces you want to manage with Git workflow. If you want to track more workspaces at once, there are few options:
 
 * Duplicate the parts of the `.http` files that are responsible for the workspace management and update the workspace ID in the copied snippet. New workspaces will be added to a separate folder under the `definitions` the next time when you run `import` script.
-* Adjust the `.http` file to load all workspaces at once using the `/api/entities/workspaces` feed (see our [API Reference](https://www.gooddata.com/developers/cloud-native/doc/1.7/api/api_reference_all/#/entities/getAllEntities%40Workspaces)). You will also want to edit [`toJson.js`](./scripts/toJson.js) and [`toYaml.js`](./scripts/toYaml.js) scripts to split the resulting JSON into separate files, otherwise it might be not scalable depending on how big your workspaces are.
+* Adjust the `.http` file to load all workspaces at once using the `/api/entities/workspaces` feed (see our [API Reference](https://www.gooddata.com/developers/cloud-native/doc/hosted/api-and-sdk/api/api_reference_all/#/entities/getAllEntities%40Workspaces)). You will also want to edit [`toJson.js`](./scripts/toJson.js) and [`toYaml.js`](./scripts/toYaml.js) scripts to split the resulting JSON into separate files, otherwise it might be not scalable depending on how big your workspaces are.
 
 ### ...track users with declarative definitions
 
 By default, we only include feeds for the user groups management into the `.http` files. That's because we expect you
-to have a different set of users on you dev, QA and production environment anyway. On top of that, storing user in VCS
+to have a different set of users on your dev, QA and production environment anyway. On top of that, storing user in VCS
 is not the best idea, as this is the data that changes rather often in most cases.
 
 However, if you only manage a handful of predefined users and have the same SSO provider on all your environments,
@@ -167,9 +167,9 @@ A new `./definitions/users.yml` file will be created with a list of all users un
 
 Given setup will work well for a small to medium projects, but could become unmanageable for large projects with
 big analytical models (i.e. large number of metrics, insights and dashboards). There are few options how you can overcome this:
-* Use more granular Entities API to load analytical model. See our [REST API reference](https://www.gooddata.com/developers/cloud-native/doc/latest/api/api_reference_all/).
+* Use more granular Entities API to load analytical model. See our [REST API reference](https://www.gooddata.com/developers/cloud-native/doc/hosted/api-and-sdk/api/api_reference_all/).
 * Make [`toJson.js`](./scripts/toJson.js) and [`toYaml`](./scripts/toYaml.js) scripts smarter and aware of the type of content they are parsing. E.g. you can define a logic that would split the analytical model and put every dashboard, insight and metric into an individual YAML file.
-* For implementing complex workflows consider using our [Python SDK](https://www.gooddata.com/developers/cloud-native/doc/latest/python-libraries/).
+* For implementing complex workflows consider using our [Python SDK](https://www.gooddata.com/developers/cloud-native/doc/hosted/api-and-sdk/python-sdk/).
 
 ---
 
