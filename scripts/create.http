@@ -4,7 +4,7 @@
 
 ### Create data source
 # @name dataSource
-POST {{base_url}}/api/entities/dataSources
+POST {{base_url}}/entities/dataSources
 Authorization: Bearer {{token}}
 Content-Type: application/vnd.gooddata.api+json
 
@@ -18,7 +18,7 @@ client.test('Create data source', () => {
 
 ### Publish data source physical data model
 # @name dataSourcePhysicalModel
-PUT {{base_url}}/api/layout/dataSources/demo_ds/physicalModel
+PUT {{base_url}}/layout/dataSources/demo_ds/physicalModel
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -32,7 +32,7 @@ client.test('Publish data source PDM', () => {
 
 ### Publish user groups
 # @name userGroups
-PUT {{base_url}}/api/layout/userGroups
+PUT {{base_url}}/layout/userGroups
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -46,7 +46,7 @@ client.test('Publish user groups', () => {
 
 ### Create the workspace
 # @name workspace
-POST {{base_url}}/api/entities/workspaces
+POST {{base_url}}/entities/workspaces
 Authorization: Bearer {{token}}
 Content-Type: application/vnd.gooddata.api+json
 
@@ -60,7 +60,7 @@ client.test('Create the workspace', () => {
 
 ### Publish the workspace permissions
 # @name workspacePermissions
-PUT {{base_url}}/api/layout/workspaces/demo_ws/permissions
+PUT {{base_url}}/layout/workspaces/demo_ws/permissions
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -74,7 +74,7 @@ client.test('Publish workspace permissions', () => {
 
 ### Publish the workspace logical data model
 # @name workspaceLDM
-PUT {{base_url}}/api/layout/workspaces/demo_ws/logicalModel
+PUT {{base_url}}/layout/workspaces/demo_ws/logicalModel
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -88,7 +88,7 @@ client.test('Publish workspace LDM', () => {
 
 ### Publish the workspace analytics model
 # @name workspaceAnalytics
-PUT {{base_url}}/api/layout/workspaces/demo_ws/analyticsModel
+PUT {{base_url}}/layout/workspaces/demo_ws/analyticsModel
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
