@@ -1,4 +1,5 @@
 .idea
-node_modules
-json/
-http-client.private.env.json
+credentials.*.yaml
+!credentials.development.yaml
+.env.*
+!.env.development

@@ -1,0 +1,6 @@
+content:
+  format: $#,##0
+  maql: SELECT {metric/revenue} WHERE {label/products.category} IN ("Home")
+description: ''
+id: revenue-home
+title: Revenue (Home)

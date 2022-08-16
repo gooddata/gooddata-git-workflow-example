@@ -1,0 +1,6 @@
+content:
+  format: $#,##0
+  maql: SELECT {metric/revenue} WHERE {label/products.category} IN ( "Electronics")
+description: ''
+id: revenue-electronic
+title: Revenue (Electronic)

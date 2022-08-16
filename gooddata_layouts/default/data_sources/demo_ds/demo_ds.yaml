@@ -1,0 +1,8 @@
+enableCaching: false
+id: demo_ds
+name: GDC Good Demo Data source
+permissions: []
+schema: demo
+type: POSTGRESQL
+url: jdbc:postgresql://localhost:5432/demo
+username: demouser

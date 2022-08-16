@@ -1,0 +1,6 @@
+content:
+  format: '#,##0.0%'
+  maql: SELECT {metric/revenue} / {metric/total_revenue}
+description: ''
+id: percent_revenue
+title: '% Revenue'
