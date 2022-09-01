@@ -25,7 +25,7 @@ def main():
     if not Path(credentials_path).exists():
         raise RuntimeError(f"Credentials file does not exist, trying to load from {credentials_path}")
 
-    skip_ds_test = os.getenv("GD_TEST_DATA_SOURCES", "True").lower() in ("true", "t", "1", "yes", "y")
+    test_data_sources = os.getenv("GD_TEST_DATA_SOURCES", "True").lower() in ("true", "t", "1", "yes", "y")
 
     root_path = Path.cwd()
 
@@ -36,7 +36,7 @@ def main():
         raise RuntimeError(f"GoodData server at {host} is unavailable")
 
     # Push data sources and PDM
-    sdk.catalog_data_source.load_and_put_declarative_data_sources(root_path, credentials_path, skip_ds_test)
+    sdk.catalog_data_source.load_and_put_declarative_data_sources(root_path, credentials_path, test_data_sources)
 
     # Push user groups
     sdk.catalog_user.load_and_put_declarative_user_groups(root_path)
