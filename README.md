@@ -51,6 +51,7 @@ We are using environment variables to pass all necessary info to the Python scri
 * `GD_TOKEN` - A Token to be used to authenticate with GoodData server. [You can obtain the token from GoodData web UI](https://www.gooddata.com/developers/cloud-native/doc/hosted/getting-started/create-api-token/).
 * `GD_CREDENTIALS` - A path to the file with data source passwords and tokens. Read more about the file purpose and format below. Defaults to `credentials.${GD_ENV}.yaml`.
 * `GD_ENV` - Optional, an environment name to use for autoloading env variables. Defaults to `development`. See description below.
+* `GD_TEST_DATA_SOURCES` - Optional, defaults to `True`. A boolean variable that defines if we should test data sources connectivity from GoodData server before pushing the metadata.
 
 ### `.env.*` files
 
@@ -93,7 +94,7 @@ data_sources:
 
 Every entry in the `data_sources` object consists of the data source id as a key and either a password or a path to the JSON token (for BigQuery database).
 
-> Since credential files contain sensitive data, make sure not to put the contents of the file to the version control system.
+> Since credential files contain sensitive data, make sure **not** to put the contents of the file to the version control system.
 > Consider removing `!credentials.development.yaml` line from `.gitignore` once you start using the setup with your own data sources.
 
 ## CI/CD pipelines
@@ -122,14 +123,13 @@ Few steps to keep in mind:
 ### ...start using Git workflow for my project
 
 * Make sure the environment is prepared according to the [instruction above](#configuration).
-* Remove the `gooddata_layouts` folder completely.
 * Run `python ./scripts/pull.py` command. Make sure you've selected the correct environment with `GD_ENV` variable.
 
 The script will create `gooddata_layouts` folder and populate it with corresponding YAML files. Next, you can commit the new definitions to you VCS.
 
 ### ...track users with declarative definitions
 
-By default, we only include feeds for the user groups management into the `.http` files. That's because we expect you
+By default, we only manage the user groups, but not users. That's because we expect you
 to have a different set of users on your dev, QA and production environment anyway. On top of that, storing user in VCS
 might not be the best idea, as this is the data that changes rather often in most cases.
 

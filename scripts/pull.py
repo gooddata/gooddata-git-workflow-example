@@ -28,17 +28,21 @@ def main():
 
     sdk = GoodDataSdk.create(host, token)
 
+    # Make sure the GoodData server is running
+    if not sdk.support.is_available:
+        raise RuntimeError(f"GoodData server at {host} is unavailable")
+
     # Load new MD to a temp path. This way, if something goes wrong we will
     # still have at least old MD. Also, drop the old MD before copying so that
     # MD deleted on server is also deleted from declarative layout
     with tempfile.TemporaryDirectory() as temp_dir:
         temp_path = Path(temp_dir)
 
-        # Pull user groups
-        sdk.catalog_user.store_declarative_user_groups(temp_path)
-
         # Pull data sources and PDM
         sdk.catalog_data_source.store_declarative_data_sources(temp_path)
+
+        # Pull user groups
+        sdk.catalog_user.store_declarative_user_groups(temp_path)
 
         # Pull workspaces
         sdk.catalog_workspace.store_declarative_workspaces(temp_path)

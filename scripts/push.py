@@ -25,15 +25,21 @@ def main():
     if not Path(credentials_path).exists():
         raise RuntimeError(f"Credentials file does not exist, trying to load from {credentials_path}")
 
+    skip_ds_test = os.getenv("GD_TEST_DATA_SOURCES", "True").lower() in ("true", "t", "1", "yes", "y")
+
     root_path = Path.cwd()
 
     sdk = GoodDataSdk.create(host, token)
 
-    # Push user groups
-    sdk.catalog_user.load_and_put_declarative_user_groups(root_path)
+    # Make sure the GoodData server is running
+    if not sdk.support.is_available:
+        raise RuntimeError(f"GoodData server at {host} is unavailable")
 
     # Push data sources and PDM
-    sdk.catalog_data_source.load_and_put_declarative_data_sources(root_path, credentials_path)
+    sdk.catalog_data_source.load_and_put_declarative_data_sources(root_path, credentials_path, skip_ds_test)
+
+    # Push user groups
+    sdk.catalog_user.load_and_put_declarative_user_groups(root_path)
 
     # Push workspaces
     sdk.catalog_workspace.load_and_put_declarative_workspaces(root_path)
