@@ -1,2 +1,2 @@
-gooddata_sdk>=1.0.0
+gooddata_sdk>=1.2.0
 python-dotenv>=0.20.0

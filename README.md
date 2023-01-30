@@ -1,7 +1,7 @@
 # GoodData declarative definitions
 
 This repo contains a set of Python scripts that you can use to manage
-[GoodData.CN](https://www.gooddata.com/developers/cloud-native/) and GoodData Cloud workspaces in a declarative way.
+GoodData.CN and GoodData Cloud workspaces in a declarative way.
 Here is when you might want to use it:
 
 * Version Control System (e.g. Git) integration for versioning, collaboration, CI/CD etc.
@@ -9,7 +9,7 @@ Here is when you might want to use it:
 
 ## Quick start
 
-This project is built using [GoodData Python SDK](https://gooddata-sdk.readthedocs.io/). Make sure you have Python 3.7 or newer on your machine.
+This project is built using [GoodData Python SDK](https://www.gooddata.com/docs/python-sdk/docs/). Make sure you have Python 3.7 or newer on your machine.
 
 In terminal, navigate to the root folder of this repository and run `python -m pip install -r requirements.txt`.
 This will install all necessary dependencies for the CLI scripts that we are going to use.

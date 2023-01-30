@@ -1,61 +1,61 @@
 content:
   buckets:
-  - items:
-    - measure:
-        alias: Pervious Period
-        definition:
-          previousPeriodMeasure:
-            dateDataSets:
-            - dataSet:
-                identifier:
-                  id: date
-                  type: dataset
-              periodsAgo: 1
-            measureIdentifier: c82e025fa2db4afea9a600a424591dbe
-        localIdentifier: c82e025fa2db4afea9a600a424591dbe_pop
-    - measure:
-        alias: This Period
-        definition:
-          measureDefinition:
-            filters: []
-            item:
+    - items:
+        - measure:
+            alias: Pervious Period
+            definition:
+              previousPeriodMeasure:
+                dateDataSets:
+                  - dataSet:
+                      identifier:
+                        id: date
+                        type: dataset
+                    periodsAgo: 1
+                measureIdentifier: c82e025fa2db4afea9a600a424591dbe
+            localIdentifier: c82e025fa2db4afea9a600a424591dbe_pop
+        - measure:
+            alias: This Period
+            definition:
+              measureDefinition:
+                filters: []
+                item:
+                  identifier:
+                    id: revenue
+                    type: metric
+            localIdentifier: c82e025fa2db4afea9a600a424591dbe
+            title: Revenue
+      localIdentifier: measures
+    - items:
+        - attribute:
+            displayForm:
               identifier:
-                id: revenue
-                type: metric
-        localIdentifier: c82e025fa2db4afea9a600a424591dbe
-        title: Revenue
-    localIdentifier: measures
-  - items:
-    - attribute:
+                id: products.category
+                type: label
+            localIdentifier: c804ef5ba7944a5a9f360c86a9e95e9a
+      localIdentifier: view
+  filters:
+    - negativeAttributeFilter:
+        displayForm:
+          identifier:
+            id: product_name
+            type: label
+        notIn:
+          values: []
+    - relativeDateFilter:
+        dataSet:
+          identifier:
+            id: date
+            type: dataset
+        from: -11
+        granularity: GDC.time.month
+        to: 0
+    - negativeAttributeFilter:
         displayForm:
           identifier:
             id: products.category
             type: label
-        localIdentifier: c804ef5ba7944a5a9f360c86a9e95e9a
-    localIdentifier: view
-  filters:
-  - negativeAttributeFilter:
-      displayForm:
-        identifier:
-          id: product_name
-          type: label
-      notIn:
-        values: []
-  - relativeDateFilter:
-      dataSet:
-        identifier:
-          id: date
-          type: dataset
-      from: -11
-      granularity: GDC.time.month
-      to: 0
-  - negativeAttributeFilter:
-      displayForm:
-        identifier:
-          id: products.category
-          type: label
-      notIn:
-        values: []
+        notIn:
+          values: []
   properties:
     controls:
       legend:

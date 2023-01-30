@@ -1,15 +1,15 @@
 columns:
-- dataType: STRING
-  isPrimaryKey: false
-  name: category
-- dataType: INT
-  isPrimaryKey: true
-  name: product_id
-- dataType: STRING
-  isPrimaryKey: false
-  name: product_name
+  - dataType: STRING
+    isPrimaryKey: false
+    name: category
+  - dataType: INT
+    isPrimaryKey: true
+    name: product_id
+  - dataType: STRING
+    isPrimaryKey: false
+    name: product_name
 id: products
 path:
-- demo
-- products
+  - demo
+  - products
 type: TABLE
