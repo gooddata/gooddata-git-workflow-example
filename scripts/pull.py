@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # (C) 2022 GoodData Corporation
 import os, shutil, tempfile
-from gooddata_sdk import GoodDataSdk
 from pathlib import Path
 from dotenv import load_dotenv
+from utils import get_gooddata_sdk
 
 # TODO "gooddata_layouts" should be imported from the lib
 LAYOUT_ROOT_FOLDER = "gooddata_layouts"
@@ -15,22 +15,9 @@ def main():
     # Load corresponding env variables from file, if exists
     load_dotenv(f".env.{environment}")
 
-    # Get all the necessary arguments from environment
-    host = os.getenv("GD_HOST")
-    if host is None:
-        raise RuntimeError("GD_HOST environmental variable must be defined")
-
-    token = os.getenv("GD_TOKEN")
-    if token is None:
-        raise RuntimeError("GD_TOKEN environmental variable must be defined")
-
     layout_path = Path.cwd() / LAYOUT_ROOT_FOLDER
 
-    sdk = GoodDataSdk.create(host, token)
-
-    # Make sure the GoodData server is running
-    if not sdk.support.is_available:
-        raise RuntimeError(f"GoodData server at {host} is unavailable")
+    sdk = get_gooddata_sdk()
 
     # Load new MD to a temp path. This way, if something goes wrong we will
     # still have at least old MD. Also, drop the old MD before copying so that
