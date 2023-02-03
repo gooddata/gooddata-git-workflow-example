@@ -1,122 +1,117 @@
 # GoodData declarative definitions
 
-This repo contains a set of templates and CLI commands that you can use to manage
-[GoodData.CN](https://www.gooddata.com/developers/cloud-native/) and GoodData Cloud workspaces in a declarative way.
+This repo contains a set of Python scripts that you can use to manage
+GoodData.CN and GoodData Cloud workspaces in a declarative way.
 Here is when you might want to use it:
 
 * Version Control System (e.g. Git) integration for versioning, collaboration, CI/CD etc.
-* Moving metadata between different environments.
+* Moving metadata between different environments (e.g. production, staging, development).
+
+## Quick start
+
+This project is built using [GoodData Python SDK](https://www.gooddata.com/docs/python-sdk/docs/). Make sure you have Python 3.7 or newer on your machine.
+
+In terminal, navigate to the root folder of this repository and run `python -m pip install -r requirements.txt`.
+This will install all necessary dependencies for the CLI scripts that we are going to use.
+
+This repository contains two scripts that you can run to sync between declarative definitions in the local files and
+GoodData.CN or GoodData Cloud server.
+
+* [`scripts/pull.py`](./scripts/pull.py) will fetch all data sources, workspaces and user groups from GoodData server and store it in YAML files under `gooddata_layouts`.
+* [`scripts/push.py`](./scripts/push.py) will load all YAML files from `gooddata_layouts` folder and push them to your GoodData server instance.
+
+Given you have [GoodData.CN Docker image](https://hub.docker.com/r/gooddata/gooddata-cn-ce/) running at `http://localhost:3000`,
+you can simply execute in your console:
+
+```shell
+python ./scripts/push.py`
+```
+
+The script will push the metadata from `gooddata_layouts` folder to your GoodData.CN server. You should see newly created assets in your
+browser if you navigate to [http://localhost:3000](http://localhost:3000).
+
+> Note, this is a destructive operation. Any data source configurations, workspaces or user groups that you might have on GoodData.CN
+> will be deleted. Consider running a fresh GoodData.CN instance for this test.
+
+We are using GoodData.CN built-in Postgres server with [an example database](https://www.gooddata.com/developers/cloud-native/doc/hosted/getting-started/connect-data/#example-database) for this setup.
+If you want to try this out with GoodData Cloud, you'll need to update [the data source configuration](./gooddata_layouts/default/data_sources/demo_ds/demo_ds.yaml)
+to point to our [Snowflake demo setup](https://www.gooddata.com/developers/cloud-native/doc/cloud/getting-started/connect-data/#example-database), as GoodData Cloud does not have a built-in Postgres server.
 
 ## Folder structure
 
-* [`definitions`](./definitions) folder contains an example definitions that you can use as a starting point. It's based on the demo project that can be automatically added to GoodData Cloud instance.
-* [`scripts`](./scripts) folder contains a set of `.http` and `.js` files to handle metadata sync between `definitions` and GoodData server.
-  * [`import.http`](./scripts/import.http) contains a set of HTTP request templates for importing declarative definitions from GoodData server.
-  * [`create.http`](./scripts/create.http) is focusing on pushing the `definitions` to a fresh GoodData server instance. 
-  * [`update.http`](./scripts/update.http) is focusing on pushing a new version of the `definitions` to an existing GoodData server instance.
-  * [`toJson.js`](./scripts/toJson.js) is a helper script that converts YAML files to JSON before it's being uploaded to GoodData server. Typically, you would not need to update this file.
-  * [`toYaml.js`](./scripts/toYaml.js) is a helper script that converts JSON definitions to YAML before saving them to `definitions` folder. Typically, you would not need to update this file.
+* [`gooddata_layouts`](./gooddata_layouts) folder contains an example definitions that you can use as a starting point.
+* [`scripts`](./scripts) folder contains Python scripts to handle metadata sync between `gooddata_layouts` folder and GoodData server.
 * [`.github/workflows/cd.yaml`](.github/workflows/cd.yaml) contains an example CD pipeline that updates production server every time there is a new commit to master branch of this repository.
 
-## Environment setup
+## Configuration
 
-The setup prepared in a way that you can edit and test individual requests in `.http` files in your favorite IDE.
-For usage in CI/CD pipeline, we also have a set of scripts prepared in [`package.json`](./package.json) file. 
+We are using environment variables to pass all necessary info to the Python scripts.
 
-### Installing dependencies
+* `GD_HOST` - A URL of your GoodData server instance, including protocol and port. For example, `https://example.gooddata.com` or `http://localhost:300`.
+* `GD_TOKEN` - A Token to be used to authenticate with GoodData server. [You can obtain the token from GoodData web UI](https://www.gooddata.com/developers/cloud-native/doc/hosted/getting-started/create-api-token/).
+* `GD_CREDENTIALS` - A path to the file with data source passwords and tokens. Read more about the file purpose and format below. Defaults to `credentials.${GD_ENV}.yaml`.
+* `GD_ENV` - Optional, an environment name to use for autoloading env variables. Defaults to `development`. See description below.
+* `GD_TEST_DATA_SOURCES` - Optional, defaults to `True`. A boolean variable that defines if we should test data sources connectivity from GoodData server before pushing the metadata.
 
-Install [`NodeJS`](https://nodejs.org/en/) on your machine.
+### `.env.*` files
 
-In terminal, navigate to the root folder of this repository and run `npm i`.
-This will install all necessary dependencies for the CLI scripts that we are going to use.
+While it's perfectly fine to fill the env variables every time you need to pull or push the metadata, it is
+much more convenient to store these variables into files, specially if you need to pull / push between different
+GoodData server instances.
 
-### Configuring IDE
+Our Python scripts support loading variables from the `.env` files. By default, the script will check if there is a
+`.env.development` file in the project root and if it's there - load the variables from file. You can create more of
+such `.env.*` files (`.env.production`, `.env.staging` etc.) and switch between them by defining `GD_ENV` variable.
 
-You should be able to edit `.http` files in any IDE that supports them natively or has an extension for them. We've tested
-the setup in IntelliJ and VSCode.
+For example, if you have defined `.env.development` and `.env.production` and want to propagate changes from dev to prod
+env, you could run the following commands:
 
-#### IntelliJ IDEs
+```shell
+python ./scripts/pull.py # "development" is the default GD_ENV
+GD_ENV=production python ./scripts/push.py # explicitly select production env
+```
 
-You don't need to do any special steps for IntelliJ family of IDEs (Idea, WebStorm, PyCharm etc.), as this IDEs
-support running `.http` files out of box.
+Refer to [`.env.development`](./.env.development) for an example.
 
-#### Visual Studio Code
+> We do not recommend putting your env files to version control system or otherwise share them publicly, as they
+> may contain credentials, such as GoodData.CN API Token. We are including `.env.development` here as
+> an example because it contains a well-known default GoodData.CN token.
 
-For VSCode we recommend installing either [`httpYac`](https://marketplace.visualstudio.com/items?itemName=anweber.vscode-httpyac)
-or [`httpBook`](https://marketplace.visualstudio.com/items?itemName=anweber.httpbook) extensions.
+### Credential files
 
-`httpYac` has a simple interface, similar to the popular REST Client extension. Unlike REST Client, it has a good
-compatibility with IntelliJ-specific syntax, so you can have better cooperation in large teams, where different people
-have different IDE preferences. We are using `httpYac` CLI tools to run CI/CD scripts as well.
+`GD_CREDENTIALS` env variable contains a path to the file where your data source credentials are stored. You can either
+provide the variable explicitly, or it will be derived from the `GD_ENV` as `credentials.${GD_ENV}.yaml`.
 
-`httpBook` is based on the `httpYac` and adds an option to view `.http` files as Jupyter notebooks. We recommend using
-this extension if you're planning to run HTTP commands mostly manually and would like to add rich description to each
-command.
+For example, if your environment is set to `development`, autogenerated `GD_CREDENTIALS` path would be `credentials.development.yaml`.
 
-### Setting up environment variables
+Contents of the credentials file look like this:
 
-We are using IntelliJ way of organizing environment variables:
+```yaml
+data_sources:
+  data_source_1: passwd
+  data_source_2: ./path/to/big_query/token.json
+```
 
-* [`http-client.env.json`](./http-client.env.json) contains public variables that should be saved in Git repository.  For example, this file stores a hostname of your GoodData instance.
-* [`http-client.private.env.json`](./http-client.private.env.json.template) contains private variable, a.k.a. secrets. The file is added to `.gitignore` to prevent committing it by accident.
+Every entry in the `data_sources` object consists of the data source id as a key and either a password or a path to the JSON token (for BigQuery database).
 
-In the example files we pre-defined two environments for you.
+> Since credential files contain sensitive data, make sure **not** to put the contents of the file to the version control system.
+> Consider removing `!credentials.development.yaml` line from `.gitignore` once you start using the setup with your own data sources.
 
-* `production` environment will store hostname, database credentials etc. of your production server.
-* `development` environment is for dev purposes - to test new ideas and develop your analytical solution. It can be either another instance of GoodData server deployed in the cloud, or your local Docker instance.
+## CI/CD pipelines
 
-You can add as many extra environments as you need (e.g. for staging or QA servers), just use existing ones as an example.
-
-Let's fill in all the needed variables according to your setup:
-
-* In [`http-client.env.json`](./http-client.env.json), fill in base URL for your production server and development server. `http://localhost:3000/api/v1` for dev server works if you're using local Docker instance for development.
-* Copy [`http-client.private.env.json.template`](./http-client.private.env.json.template) to a new `http-client.private.env.json` file.
-  * `token` is your API Token for the server.
-  * `demo_ds_*` variables are for database connection. See [`dataSource definition`](./definitions/dataSources/demo_ds/entity.yml) for details. The default example is showcasing Snowflake connection, so you might need to change the definition and variables according to [our docs](https://www.gooddata.com/developers/cloud-native/doc/hosted/connect-data/supported/).
-
-### Testing the setup
-
-You should be all set to run the `.http` commands from your IDE. Let's test it by executing some commands
-from the [import.http](./scripts/import.http) file. Don't worry, those are read-only commands and will not update any
-metadata on your server or in `definitions` folder.
-
-![](./assets/successful_run.gif)
-
-Next you can read how you can [configure CI/CD pipeline](#configure-cicd-pipelines) or dive deeper into different [use cases](#how-do-i) for declarative definitions.
-
-## Predefined commands
-
-[`package.json`](./package.json) file contains several pre-defined scripts for your convenience. Each script is available for both `prod` and `dev` environment.
-
-* `import-prod` and `import-dev` scripts will execute [`import.http`](./scripts/import.http) and save the downloaded metadata in the [`definitions`](./definitions) folder. Any files with conflicting names will be overridden.
-* `create-prod` and `create-dev` scripts will execute [`create.http`](./scripts/create.http) and push all the [`definitions`](./definitions) to the corresponding prod or dev server. This script is meant to be used when deploying on a completely new, blank instance.
-* `update-prod` and `update-dev` scripts will execute [`update.http`](./scripts/update.http) and push all the [`definitions`](./definitions) to the corresponding prod or dev server. This script is meant for metadata updates to a newer version. I.e. it expects that assets like Workspace and DataSource are already created.
-
-Ideally, we would want to have a single `.http` file for both `create` and `update` operations (i.e. `upsert`), but at the moment there is a limit in how our server's API works.
-
-> NOTE. `update-*` and `create-*` scripts are generating temporary `json` folder where it stores files converted from YML definitions. JSONs in that folder also have environmental variables already populated.
-> This means that your database credentials will be saved there as well in plain text. Make sure to never store the JSON folder in your VCS and never share it openly. 
-
-## Configure CI/CD pipelines
-
-You can find an example of the CI/CD pipeline in the `.github/workflows/cd.yaml` file. The configuration is rather
-simple. Every time there a new commit to the master branch, GitHub Actions will execute `npm run update-prod` to
-push the new changes to the production server.
-
-> NOTE. Whenever you're adding a completely new entity to the organization (like, new a data source or a new workspace),
-> you'll need to create that asset on the production server manually because we are using Entities API instead of Layouts API
-> for that. Entities API does not support upsert, so you'll have to explicitly either create or update the entity. We
-> are working on mitigating this limitation in the future releases of the GoodData.CN and GoodData Cloud.
+You can find an example of the CI/CD pipeline in the [`.github/workflows/cd.yaml`](.github/workflows/cd.yaml) file.
+The configuration is rather simple. Every time there a new commit to the master branch, GitHub Actions will execute
+`python ./scripts/push.py` to push the new changes to the **production** server.
 
 Using our configuration file as an example, you can set up any other pipeline (CircleCI, Bitbucket Pipelines, Jenkins etc.).
 Few steps to keep in mind:
 
 1. Configure your pipeline to be executed on every commit to the main branch.
-2. Make sure that the environment you're running in supports NodeJS (e.g. by specifying the correct Docker image for your pipeline).
+2. Make sure that the environment you're running in supports Python 3.7+ (e.g. by specifying the correct Docker image for your pipeline).
 3. Checkout repo on the master branch and navigate to the project root folder.
-4. Install NPM dependencies by executing `npm ci`.
-5. Ensure the `http-client.private.env.json` file is created and populated in the root folder of the project. Make sure to use best practices for storing credentials for your pipeline. For example, in GitHub we are using Secrets to store data source credentials.
-6. Execute `npm run update-prod` to push new changes to the production server.
+4. Install Python dependencies by executing `python -m pip install -r requirements.txt`.
+5. Ensure environment variables are defined according to the docs above. Make sure to use best practices for storing credentials for your pipeline. For example, in GitHub we are using Secrets to store data source credentials.
+6. Execute `python ./scripts/push.py` to push new changes to the production server.
 
 > NOTE. Current setup will override any changes done on production server through our Web UI. If you want to allow some
 > level of self-service to your users, you would need to define a more complex workflow. With some scripting, it should
@@ -127,49 +122,37 @@ Few steps to keep in mind:
 
 ### ...start using Git workflow for my project
 
-* Make sure the environment is prepared according to the [instruction above](#setting-up-environment-variables).
-* Remove the `definitions` folder completely.
-* Edit all `.http` files and replace the workspace id (`demo_ws`) and data source id (`demo_ds`) with the actual workspace and data source ids that you want to track.
-* Run `npm run import-dev` command if you want to import definitions from your development server or `npm run import-prod` if you want to import from production.
+* Make sure the environment is prepared according to the [instruction above](#configuration).
+* Run `python ./scripts/pull.py` command. Make sure you've selected the correct environment with `GD_ENV` variable.
 
-The script will create `definitions` folder and populate it with corresponding YAML files. Next, you can commit the new definitions to you VCS.
-
-### ...track more workspaces in a single Git repository at once
-
-The `.http` files are created in a way that you need to explicitly define which workspaces you want to manage with Git workflow. If you want to track more workspaces at once, there are few options:
-
-* Duplicate the parts of the `.http` files that are responsible for the workspace management and update the workspace ID in the copied snippet. New workspaces will be added to a separate folder under the `definitions` the next time when you run `import` script.
-* Adjust the `.http` file to load all workspaces at once using the `/api/entities/workspaces` feed (see our [API Reference](https://www.gooddata.com/developers/cloud-native/doc/hosted/api-and-sdk/api/api_reference_all/#/entities/getAllEntities%40Workspaces)). You will also want to edit [`toJson.js`](./scripts/toJson.js) and [`toYaml.js`](./scripts/toYaml.js) scripts to split the resulting JSON into separate files, otherwise it might be not scalable depending on how big your workspaces are.
+The script will create `gooddata_layouts` folder and populate it with corresponding YAML files. Next, you can commit the new definitions to you VCS.
 
 ### ...track users with declarative definitions
 
-By default, we only include feeds for the user groups management into the `.http` files. That's because we expect you
+By default, we only manage the user groups, but not users. That's because we expect you
 to have a different set of users on your dev, QA and production environment anyway. On top of that, storing user in VCS
-is not the best idea, as this is the data that changes rather often in most cases.
+might not be the best idea, as this is the data that changes rather often in most cases.
 
 However, if you only manage a handful of predefined users and have the same SSO provider on all your environments,
-you can edit `.http` files to sync users. For examples, in [`import.http`](./scripts/import.http) you can add:
+you can edit python scripts to sync users. For example, in [`pull.py`](./scripts/pull.py) you can add the following
+line into `main` function after the line that loads user groups:
 
-```
-### Import users
-# @name users
-GET {{base_url}}/layout/users
-Authorization: Bearer {{token}}
-
-> {% client.assert(response.status >= 200 && response.status < 300, `Request failed with status code ${response.status}`) %}
+```python
+sdk.catalog_user.store_declarative_users(temp_path)
 ```
 
-Similar code snippets would need to be added to `create.http` and `update.http` files.
+And a similar snippet has to be added to [`push.py`](./scripts/push.py):
 
-A new `./definitions/users.yml` file will be created with a list of all users under your organization.
+```python
+sdk.catalog_user.load_and_put_declarative_users(temp_path)
+```
 
 ## Known limitations
 
-Given setup will work well for a small to medium projects, but could become unmanageable for large projects with
-big analytical models (i.e. large number of metrics, insights and dashboards). There are few options how you can overcome this:
-* Use more granular Entities API to load analytical model. See our [REST API reference](https://www.gooddata.com/developers/cloud-native/doc/hosted/api-and-sdk/api/api_reference_all/).
-* Make [`toJson.js`](./scripts/toJson.js) and [`toYaml`](./scripts/toYaml.js) scripts smarter and aware of the type of content they are parsing. E.g. you can define a logic that would split the analytical model and put every dashboard, insight and metric into an individual YAML file.
-* For implementing complex workflows consider using our [Python SDK](https://www.gooddata.com/developers/cloud-native/doc/hosted/api-and-sdk/python-sdk/).
+This project is set up to manage all of your metadata at once. If you want to handle only a subset of your workspaces
+or have different data sources for different environments, you would have to edit Python scripts accordingly.
+
+Refer to [Python SDK documentation](https://gooddata-sdk.readthedocs.io/en/latest/index.html) for more details.
 
 ---
 

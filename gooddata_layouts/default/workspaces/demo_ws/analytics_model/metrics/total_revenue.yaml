@@ -1,0 +1,6 @@
+content:
+  format: $#,##0
+  maql: SELECT {metric/revenue} BY ALL OTHER
+description: ''
+id: total_revenue
+title: Total Revenue

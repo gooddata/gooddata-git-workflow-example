@@ -8,30 +8,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          cache: 'pip'
       - name: Install dependencies
-        run: npm ci
-      - name: Set up http-client.private.env.json
+        run: pip install -r requirements.txt
+      - name: Set up credentials.production.yaml
         env:
-          token: ${{ secrets.TOKEN }}
-          demo_ds_password: ${{ secrets.DEMO_DS_PASSWORD }}
-          demo_ds_user: ${{ secrets.DEMO_DS_USER }}
-          demo_ds_schema: ${{ secrets.DEMO_DS_SCHEMA }}
-          demo_ds_url: ${{ secrets.DEMO_DS_URL }}
+          DEMO_DS_PASSWORD: ${{ secrets.DEMO_DS_PASSWORD }}
         run: |
-          echo "{
-            \"production\": {
-              \"token\": \"${token}\",
-              \"demo_ds_password\": \"${demo_ds_password}\",
-              \"demo_ds_user\": \"${demo_ds_user}\",
-              \"demo_ds_schema\": \"${demo_ds_schema}\",
-              \"demo_ds_url\": \"${demo_ds_url}\"
-            }
-          }" > http-client.private.env.json
+          echo "demo_ds: ${DEMO_DS_PASSWORD}" > credentials.production.yaml
       - name: Update definitions in Production
-        env: # This is needed if you're deploying to the self-hosted dev environment with self-signed certificate
-          NODE_TLS_REJECT_UNAUTHORIZED: "0"
-        run: npm run update-prod
+        env:
+          GD_ENV: production
+          GD_TOKEN: ${{ secrets.TOKEN }}
+          GD_HOST: ${{ secrets.HOST }}
+        run: python ./scripts/push.py
       - name: Drop secret
-        run: rm http-client.private.env.json
+        run: rm credentials.production.yaml
         if: always()

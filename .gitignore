@@ -1,4 +1,6 @@
 .idea
-node_modules
-json/
-http-client.private.env.json
+__pycache__
+credentials.*.yaml
+!credentials.development.yaml
+.env.*
+!.env.development
